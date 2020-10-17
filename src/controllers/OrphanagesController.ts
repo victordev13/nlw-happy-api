@@ -17,9 +17,10 @@ export default{
         const { id } = req.params;
 
         const orphanagesRepository = getRepository(Orphanage);
-        const orphanage = await orphanagesRepository.findOneOrFail({relations: ['images']});
+        const orphanage = await orphanagesRepository.findOneOrFail(id, { relations: ['images']});
 
-        console.log(req.params)
+        console.log(req.params);
+        console.log(orphanage);
         return res.json(orphanageView.render(orphanage));
     },
 
@@ -52,7 +53,7 @@ export default{
             about, 
             instructions, 
             opening_hours, 
-            open_on_weekends,
+            open_on_weekends : open_on_weekends === 'true',
             images
         };
 
@@ -68,6 +69,7 @@ export default{
                 path: Yup.string().required()
             }))
         });
+
 
         await schema.validate(data, {
             abortEarly: false
